@@ -26,10 +26,12 @@
 <meta property="og:url" content="http://yoursite.com/2018/05/23/Android多线程编程——AsyncTask源码解析/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="简介当我们通过线程去执行耗时的任务，而且需要在任务中更新UI时。通常我们会选择使用Handler来更新UI线程。虽然操作简单，但是缺乏一定的规范和在多个线程并发是会显得代码臃肿。Goole提供了一个应对异步线程更新UI的工具，就是AsyncTask，他利用了线程池来处理多个线程，使代码更加简洁。 代码解析为了使逻辑更加清晰和通顺，我根据调用的事件顺序来分析AsyncTask的源码。 使用Async">
-<meta property="og:updated_time" content="2018-05-23T08:39:37.617Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005K79dxly1frldazyiq8j310w1mzq54.jpg">
+<meta property="og:updated_time" content="2018-05-23T08:47:36.227Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android多线程编程——AsyncTask源码解析">
 <meta name="twitter:description" content="简介当我们通过线程去执行耗时的任务，而且需要在任务中更新UI时。通常我们会选择使用Handler来更新UI线程。虽然操作简单，但是缺乏一定的规范和在多个线程并发是会显得代码臃肿。Goole提供了一个应对异步线程更新UI的工具，就是AsyncTask，他利用了线程池来处理多个线程，使代码更加简洁。 代码解析为了使逻辑更加清晰和通顺，我根据调用的事件顺序来分析AsyncTask的源码。 使用Async">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005K79dxly1frldazyiq8j310w1mzq54.jpg">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -128,7 +130,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -219,7 +221,14 @@
 <p>以上我们便完成了对一个任务的处理，但是你或许会有疑问，如果只有一个任务，我们完全可以使用Handler来进行更新，为什么还要用AsyncTask呢，它是如何进行多任务处理的呢，我们回到SerialExecutor.execute()方法，我们可以看到在r.run()之后还有一个叫做scheduleNext()的方法。它是把mTask这个队列里的方法出队之后使用THREAD_POOL_EXECUTOR进行处理，这个是什么东西呢，我们来看一下源码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();</span><br><span class="line">    private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));</span><br><span class="line">    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;</span><br><span class="line">    private static final int KEEP_ALIVE_SECONDS = 30;</span><br><span class="line">    private static final BlockingQueue&lt;Runnable&gt; sPoolWorkQueue =</span><br><span class="line">            new LinkedBlockingQueue&lt;Runnable&gt;(128);</span><br><span class="line">    public static final Executor THREAD_POOL_EXECUTOR;</span><br><span class="line">    static &#123;</span><br><span class="line">        ThreadPoolExecutor threadPoolExecutor = new threadPoolExecutor (</span><br><span class="line">                CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,</span><br><span class="line">                sPoolWorkQueue, sThreadFactory);</span><br><span class="line">        threadPoolExecutor.allowCoreThreadTimeOut(true);</span><br><span class="line">        THREAD_POOL_EXECUTOR = threadPoolExecutor;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>可以看到这是一个线程池，采用阻塞队列的方式的线程进行排队处理。</p>
-<p>以上便是我们对源码的分析</p>
+<p>以上便是我们对源码的分析，最后给出一个流程图来展示整个过程：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://ws1.sinaimg.cn/large/005K79dxly1frldazyiq8j310w1mzq54.jpg" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
 
         </div>
 
@@ -228,7 +237,7 @@
     <div class="content">
         
 <span class="post-time">
-    最終更新：<time datetime="2018-05-23T08:39:37.617Z" itemprop="dateUpdated">2018-05-23 16:39:37</time>
+    Last updated: <time datetime="2018-05-23T08:47:36.227Z" itemprop="dateUpdated">2018-05-23 16:47:36</time>
 </span><br>
 
 
@@ -384,7 +393,7 @@
 
         <p>
             
-            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
