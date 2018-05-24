@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Android网络编程——Socket攻略 | KS&#39;BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1.Socket定义 Socket即套接字，是应用层与传输层TCP/IP协议族通信的一个中间软件抽象层，表现为一个封装了TCP/IP协议族的编程接口（API）                                                                                               image               Socket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android网络编程——Socket攻略">
+<meta property="og:url" content="http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/index.html">
+<meta property="og:site_name" content="KS&#39;BLOG">
+<meta property="og:description" content="1.Socket定义 Socket即套接字，是应用层与传输层TCP/IP协议族通信的一个中间软件抽象层，表现为一个封装了TCP/IP协议族的编程接口（API）                                                                                               image               Socket">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-1a92e10c6c694d0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/545">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-eb79b5a461ac71b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-8df0ed7afe6b32d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/610">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1395050-657143e8a6b70430.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:updated_time" content="2018-05-24T06:29:07.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android网络编程——Socket攻略">
+<meta name="twitter:description" content="1.Socket定义 Socket即套接字，是应用层与传输层TCP/IP协议族通信的一个中间软件抽象层，表现为一个封装了TCP/IP协议族的编程接口（API）                                                                                               image               Socket">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/944365-1a92e10c6c694d0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/545">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">ksballetba</h5>
+          <a href="mailto:2501226111@qq.com" title="2501226111@qq.com" class="mail">2501226111@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ksballetba" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5262079347/profile?rightmod=1&wvr=6&mod=personinfo" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android网络编程——Socket攻略</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android网络编程——Socket攻略</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-24T06:28:45.000Z" itemprop="datePublished" class="page-time">
+  2018-05-24
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-Socket定义"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.Socket定义</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-建立Socket连接过程"><span class="post-toc-number">2.</span> <span class="post-toc-text">2.建立Socket连接过程</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-原理"><span class="post-toc-number">3.</span> <span class="post-toc-text">3.原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-Socket与Http对比"><span class="post-toc-number">4.</span> <span class="post-toc-text">4.Socket与Http对比</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-编程实例"><span class="post-toc-number">5.</span> <span class="post-toc-text">5.编程实例</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Android网络编程——Socket攻略"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android网络编程——Socket攻略</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-24 14:28:45" datetime="2018-05-24T06:28:45.000Z"  itemprop="datePublished">2018-05-24</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h4 id="1-Socket定义"><a href="#1-Socket定义" class="headerlink" title="1.Socket定义"></a>1.Socket定义</h4><ul>
+<li>Socket即套接字，是应用层与传输层TCP/IP协议族通信的一个中间软件抽象层，表现为一个封装了TCP/IP协议族的编程接口（API）</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-1a92e10c6c694d0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/545" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<ol>
+<li>Socket不是一种协议，而是一个编程接口，属于传输层，解决数据在网络中如何传输。通过这个接口我们可以在Android平台上使用TCP/IP协议进行开发</li>
+<li>开发则通过Socket来组织数据，使其符合相关协议，即可进行通信</li>
+</ol>
+<ul>
+<li>Socket是成对出现的，都是服务端和客户端组成，包括IP地址和PORT端口号。</li>
+</ul>
+<h4 id="2-建立Socket连接过程"><a href="#2-建立Socket连接过程" class="headerlink" title="2.建立Socket连接过程"></a>2.建立Socket连接过程</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-eb79b5a461ac71b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h4 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h4><p>Socket的使用类型主要有两种：</p>
+<ul>
+<li>流套接字（streamsocket）：基于TCP协议，采用流的方式提供可靠的字节流服务</li>
+<li>数据报套接字（datagramsocekt）：基于UDP协议，采用数据报文提供数据打包发送的服务</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-8df0ed7afe6b32d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/610" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h4 id="4-Socket与Http对比"><a href="#4-Socket与Http对比" class="headerlink" title="4.Socket与Http对比"></a>4.Socket与Http对比</h4><ul>
+<li>Socket属于传输层，因为TCP/IP协议属于传输层，解决的是数据如何在网络中传输的问题</li>
+<li>HTTP协议属于应用层，解决的是如何包装数据</li>
+</ul>
+<ul>
+<li>Http：采用请求——响应方式：</li>
+</ul>
+<ol>
+<li>即建立网络连接后，当客户端像服务器发送请求后，服务器端才返回数据。</li>
+<li>客户端有需求才进行通信</li>
+</ol>
+<ul>
+<li>Socket：采用服务器主动发送数据的方式：</li>
+</ul>
+<ol>
+<li>即建立网络连接后，服务器可主动发送消息给客户端，而不需要由客户端向服务器发送请求</li>
+<li>服务器端有需要才进行通信</li>
+</ol>
+<h4 id="5-编程实例"><a href="#5-编程实例" class="headerlink" title="5.编程实例"></a>5.编程实例</h4><p>在此从网上找了别人的代码demo，仿照着写了一个基于不同虚拟机之间的信息相互发送。</p>
+<ul>
+<li>客户端</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">public class ClientConnector &#123;</span><br><span class="line"></span><br><span class="line">    private Socket mClient;</span><br><span class="line"></span><br><span class="line">    private String mDstName;</span><br><span class="line"></span><br><span class="line">    private int mDesPort;</span><br><span class="line"></span><br><span class="line">    private ConnectLinstener mListener;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public ClientConnector(String dstName, int dstPort) &#123;</span><br><span class="line">        this.mDstName = dstName;</span><br><span class="line">        this.mDesPort = dstPort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void connect() throws IOException &#123;</span><br><span class="line">        if (mClient == null) &#123;</span><br><span class="line">            mClient = new Socket(mDstName, mDesPort);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //获取其他客户端发送过来的数据</span><br><span class="line">        InputStream inputStream = mClient.getInputStream();</span><br><span class="line">        byte[] buffer = new byte[1024];</span><br><span class="line">        int len = -1;</span><br><span class="line">        while ((len = inputStream.read(buffer)) != -1) &#123;</span><br><span class="line">            String data = new String(buffer, 0, len);</span><br><span class="line"></span><br><span class="line">            //通过回调接口将获取到的数据推送出去</span><br><span class="line">            if (mListener != null) &#123;</span><br><span class="line">                mListener.onReceiveData(data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 认证方法，这个方法是用来进行客户端一对一发送消息的</span><br><span class="line">     * 在实际项目中进行即时通讯时都需要进行登录，这里就是</span><br><span class="line">     * 模拟客户端的账号</span><br><span class="line">     *</span><br><span class="line">     * @param authName</span><br><span class="line">     */</span><br><span class="line">    public void auth(String authName) throws IOException &#123;</span><br><span class="line">        if (mClient != null) &#123;</span><br><span class="line">            //将客户端账号发送给服务端，让服务端保存</span><br><span class="line">            OutputStream outputStream = mClient.getOutputStream();</span><br><span class="line">            //模拟认证格式，以#开头</span><br><span class="line">            outputStream.write((&quot;#&quot; + authName).getBytes());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 将数据发送给指定的接收者</span><br><span class="line">     *</span><br><span class="line">     * @param receiver 信息接数者</span><br><span class="line">     * @param data     需要发送的内容</span><br><span class="line">     */</span><br><span class="line">    public void send(String receiver, String data) throws IOException &#123;</span><br><span class="line">        OutputStream outputStream = mClient.getOutputStream();</span><br><span class="line">        //模拟内容格式：receiver+  # + content</span><br><span class="line">        outputStream.write((receiver + &quot;#&quot; + data).getBytes());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 断开连接</span><br><span class="line">     *</span><br><span class="line">     * @throws IOException</span><br><span class="line">     */</span><br><span class="line">    public void disconnect() throws IOException &#123;</span><br><span class="line">        if (mClient != null) &#123;</span><br><span class="line">            mClient.close();</span><br><span class="line">            mClient = null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public void setOnConnectLinstener(ConnectLinstener linstener) &#123;</span><br><span class="line">        this.mListener = linstener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 数据接收回调接口</span><br><span class="line">     */</span><br><span class="line">    public interface ConnectLinstener &#123;</span><br><span class="line">        void onReceiveData(String data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>服务端</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">public class SocketServer &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 用来保存不同的客户端</span><br><span class="line">     */</span><br><span class="line">    private static Map&lt;String, Socket&gt; mClients = new LinkedHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        int port = 9999;</span><br><span class="line">        try &#123;</span><br><span class="line">            //创建服务器</span><br><span class="line">            ServerSocket serverSocket = new ServerSocket(port);</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                //获取客户端的连接</span><br><span class="line">                final Socket socket = serverSocket.accept();</span><br><span class="line"></span><br><span class="line">                new Thread(new Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //读取从客户端发送过来的数据</span><br><span class="line">                            InputStream inputStream = socket.getInputStream();</span><br><span class="line">                            byte[] buffer = new byte[1024];</span><br><span class="line">                            int len = -1;</span><br><span class="line">                            while ((len = inputStream.read(buffer)) != -1) &#123;</span><br><span class="line">                                String data = new String(buffer, 0, len);</span><br><span class="line"></span><br><span class="line">                                //先认证客户端</span><br><span class="line">                                if (data.startsWith(&quot;#&quot;)) &#123;</span><br><span class="line">                                    mClients.put(data, socket);</span><br><span class="line">                                &#125; else &#123;</span><br><span class="line">                                    </span><br><span class="line">                                    String[] split = data.split(&quot;#&quot;);</span><br><span class="line">                                    Socket c = mClients.get(&quot;#&quot; + split[0]);</span><br><span class="line">                                    OutputStream outputStream = c.getOutputStream();</span><br><span class="line">                                    outputStream.write(split[1].getBytes());</span><br><span class="line"></span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; catch (IOException e) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/1395050-657143e8a6b70430.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-05-24T06:29:07.062Z" itemprop="dateUpdated">2018-05-24 14:29:07</time>
+</span><br>
+
+
+        
+        多谢访问，示例：<a href="/2018/05/24/Android网络编程——Socket攻略/" target="_blank" rel="external">http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="ksballetba">
+            ksballetba
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&title=《Android网络编程——Socket攻略》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&title=《Android网络编程——Socket攻略》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android网络编程——Socket攻略》 — KS'BLOG&url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/23/Android多线程编程——AsyncTask源码解析/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android多线程编程——AsyncTask源码解析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>ksballetba &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&title=《Android网络编程——Socket攻略》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&title=《Android网络编程——Socket攻略》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android网络编程——Socket攻略》 — KS'BLOG&url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/05/24/Android网络编程——Socket攻略/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
