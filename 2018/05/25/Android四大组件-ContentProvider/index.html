@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Android四大组件--ContentProvider | KS&#39;BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="目录                                                                                             image              1.定义ContentProvider即内容提供器，Android四大组件之一 2.作用进程之间进行数据交互和共享，即跨进程通信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android四大组件--ContentProvider">
+<meta property="og:url" content="http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/index.html">
+<meta property="og:site_name" content="KS&#39;BLOG">
+<meta property="og:description" content="目录                                                                                             image              1.定义ContentProvider即内容提供器，Android四大组件之一 2.作用进程之间进行数据交互和共享，即跨进程通信">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-4424777edb4d608a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-3c4339c5f1d4a0fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-5c9b0e2ebed36c3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/944365-96019a2054eb27cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:updated_time" content="2018-05-25T11:45:25.822Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android四大组件--ContentProvider">
+<meta name="twitter:description" content="目录                                                                                             image              1.定义ContentProvider即内容提供器，Android四大组件之一 2.作用进程之间进行数据交互和共享，即跨进程通信">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/944365-4424777edb4d608a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">ksballetba</h5>
+          <a href="mailto:2501226111@qq.com" title="2501226111@qq.com" class="mail">2501226111@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ksballetba" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5262079347/profile?rightmod=1&wvr=6&mod=personinfo" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android四大组件--ContentProvider</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android四大组件--ContentProvider</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-25T11:45:08.000Z" itemprop="datePublished" class="page-time">
+  2018-05-25
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#目录"><span class="post-toc-number">1.</span> <span class="post-toc-text">目录</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-定义"><span class="post-toc-number">2.</span> <span class="post-toc-text">1.定义</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-作用"><span class="post-toc-number">3.</span> <span class="post-toc-text">2.作用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-原理"><span class="post-toc-number">4.</span> <span class="post-toc-text">3.原理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-具体使用"><span class="post-toc-number">5.</span> <span class="post-toc-text">4.具体使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-1-统一资源标识符（URI）"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">4.1 统一资源标识符（URI）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-2-ContentProvider类"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">4.2 ContentProvider类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#4-2-1-组织数据方式"><span class="post-toc-number">5.2.1.</span> <span class="post-toc-text">4.2.1 组织数据方式</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#4-3-1-主要方法"><span class="post-toc-number">5.2.2.</span> <span class="post-toc-text">4.3.1 主要方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-4-ContentResolver类"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">4.4 ContentResolver类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#4-4-1-作用"><span class="post-toc-number">5.3.1.</span> <span class="post-toc-text">4.4.1 作用</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#4-4-2-具体使用"><span class="post-toc-number">5.3.2.</span> <span class="post-toc-text">4.4.2 具体使用</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-代码实例"><span class="post-toc-number">6.</span> <span class="post-toc-text">5.代码实例</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-1-进程内通信"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">5.1 进程内通信</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-2-进程间进行数据共享"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">5.2 进程间进行数据共享</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#进程1"><span class="post-toc-number">6.2.1.</span> <span class="post-toc-text">进程1</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#进程2"><span class="post-toc-number">6.2.2.</span> <span class="post-toc-text">进程2</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Android四大组件-ContentProvider"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android四大组件--ContentProvider</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-25 19:45:08" datetime="2018-05-25T11:45:08.000Z"  itemprop="datePublished">2018-05-25</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-4424777edb4d608a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h3 id="1-定义"><a href="#1-定义" class="headerlink" title="1.定义"></a>1.定义</h3><p><em>ContentProvider</em>即内容提供器，Android四大组件之一</p>
+<h3 id="2-作用"><a href="#2-作用" class="headerlink" title="2.作用"></a>2.作用</h3><p>进程之间进行数据交互和共享，即跨进程通信</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-3c4339c5f1d4a0fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h3 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h3><ul>
+<li>ContentProvider的底层实现是通过Android的Binder机制</li>
+<li>具体可见文章 <a href="https://note.youdao.com/" target="_blank" rel="noopener">Android源码阅读——Binder通信原理</a></li>
+<li><h3 id="4-具体使用"><a href="#4-具体使用" class="headerlink" title="4.具体使用"></a>4.具体使用</h3></li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-5c9b0e2ebed36c3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h4 id="4-1-统一资源标识符（URI）"><a href="#4-1-统一资源标识符（URI）" class="headerlink" title="4.1 统一资源标识符（URI）"></a>4.1 统一资源标识符（URI）</h4><ul>
+<li><p>作用：唯一表示ContentProvider和其中的数据（开发者通过URI找到对应的ContentProvider，再进行数据操作）</p>
+</li>
+<li><p>具体使用</p>
+</li>
+<li>URI分为系统预置和自定义，分别对应系统内置的数据和自定义数据库</li>
+</ul>
+<p>此处主要对自定义URI进行分析</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/944365-96019a2054eb27cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+<h4 id="4-2-ContentProvider类"><a href="#4-2-ContentProvider类" class="headerlink" title="4.2 ContentProvider类"></a>4.2 ContentProvider类</h4><h5 id="4-2-1-组织数据方式"><a href="#4-2-1-组织数据方式" class="headerlink" title="4.2.1 组织数据方式"></a>4.2.1 组织数据方式</h5><ul>
+<li>ContentProvider主要以表格的形式组织数据</li>
+<li>每个表格中包含多张表，每张表包含行&amp;列，分别对应记录&amp;字段</li>
+</ul>
+<h5 id="4-3-1-主要方法"><a href="#4-3-1-主要方法" class="headerlink" title="4.3.1 主要方法"></a>4.3.1 主要方法</h5><ul>
+<li>进程间共享数据的本质是：添加，删除，获取和修改数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public Uri insert(Uri uri, ContentValues values) </span><br><span class="line">  // 外部进程向 ContentProvider 中添加数据</span><br><span class="line"></span><br><span class="line">  public int delete(Uri uri, String selection, String[] selectionArgs) </span><br><span class="line">  // 外部进程 删除 ContentProvider 中的数据</span><br><span class="line"></span><br><span class="line">  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)</span><br><span class="line">  // 外部进程更新 ContentProvider 中的数据</span><br><span class="line"></span><br><span class="line">  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,  String sortOrder)　 </span><br><span class="line">  // 外部应用 获取 ContentProvider 中的数据</span><br><span class="line"></span><br><span class="line">// 注：</span><br><span class="line">  // 1. 上述4个方法由外部进程回调，并运行在ContentProvider进程的Binder线程池中（不是主线程）</span><br><span class="line"> // 2. 存在多线程并发访问，需要实现线程同步</span><br><span class="line">   // a. 若ContentProvider的数据存储方式是使用SQLite &amp; 一个，则不需要，因为SQLite内部实现好了线程同步，若是多个SQLite则需要，因为SQL对象之间无法进行线程同步</span><br><span class="line">  // b. 若ContentProvider的数据存储方式是内存，则需要自己实现线程同步</span><br><span class="line"></span><br><span class="line">&lt;-- 2个其他方法 --&gt;</span><br><span class="line">public boolean onCreate() </span><br><span class="line">// ContentProvider创建后 或 打开系统后其它进程第一次访问该ContentProvider时 由系统进行调用</span><br><span class="line">// 注：运行在ContentProvider进程的主线程，故不能做耗时操作</span><br><span class="line"></span><br><span class="line">public String getType(Uri uri)</span><br><span class="line">// 得到数据类型，即返回当前 Url 所代表数据的MIME类型</span><br></pre></td></tr></table></figure>
+<p>但是我们一般直接使用ContentProvider与外部进程进行交互，而是通过ContentResolver类</p>
+<h4 id="4-4-ContentResolver类"><a href="#4-4-ContentResolver类" class="headerlink" title="4.4 ContentResolver类"></a>4.4 ContentResolver类</h4><h5 id="4-4-1-作用"><a href="#4-4-1-作用" class="headerlink" title="4.4.1 作用"></a>4.4.1 作用</h5><p>统一管理不同ContentProvider间的操作</p>
+<h5 id="4-4-2-具体使用"><a href="#4-4-2-具体使用" class="headerlink" title="4.4.2 具体使用"></a>4.4.2 具体使用</h5><p>ContentReslover提供了查询，插入，删除，更新四个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 外部进程向 ContentProvider 中添加数据</span><br><span class="line">public Uri insert(Uri uri, ContentValues values)　 </span><br><span class="line"></span><br><span class="line">// 外部进程 删除 ContentProvider 中的数据</span><br><span class="line">public int delete(Uri uri, String selection, String[] selectionArgs)</span><br><span class="line"></span><br><span class="line">// 外部进程更新 ContentProvider 中的数据</span><br><span class="line">public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)　 </span><br><span class="line"></span><br><span class="line">// 外部应用 获取 ContentProvider 中的数据</span><br><span class="line">public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>实例说明</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ContentResolver resolver =  getContentResolver(); </span><br><span class="line"></span><br><span class="line">// 设置ContentProvider的URI</span><br><span class="line">Uri uri = Uri.parse(&quot;content://cn.scu.myprovider/user&quot;); </span><br><span class="line"> </span><br><span class="line">// 根据URI 操作 ContentProvider中的数据</span><br><span class="line">// 此处是获取ContentProvider中 user表的所有记录 </span><br><span class="line">Cursor cursor = resolver.query(uri, null, null, null, &quot;userid desc&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="5-代码实例"><a href="#5-代码实例" class="headerlink" title="5.代码实例"></a>5.代码实例</h3><p>ContentReslover有两种用法，一种是进程内通信和进程间通信，本例采用的数据源是Android中的SQLite数据库</p>
+<h4 id="5-1-进程内通信"><a href="#5-1-进程内通信" class="headerlink" title="5.1 进程内通信"></a>5.1 进程内通信</h4><ul>
+<li>步骤说明</li>
+</ul>
+<ol>
+<li>创建数据库类</li>
+<li>自定义ContentProvider类</li>
+<li>注册创建的ContentProvider类</li>
+<li>进程内访问ContentProvider的数据</li>
+</ol>
+<ul>
+<li>代码</li>
+</ul>
+<p><strong>1. 创建数据库类</strong></p>
+<p><em>DBHelper.java</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class DBHelper extends SQLiteOpenHelper &#123;</span><br><span class="line"></span><br><span class="line">    // 数据库名</span><br><span class="line">    private static final String DATABASE_NAME = &quot;finch.db&quot;;</span><br><span class="line"></span><br><span class="line">    // 表名</span><br><span class="line">    public static final String USER_TABLE_NAME = &quot;user&quot;;</span><br><span class="line">    public static final String JOB_TABLE_NAME = &quot;job&quot;;</span><br><span class="line"></span><br><span class="line">    private static final int DATABASE_VERSION = 1;</span><br><span class="line">    //数据库版本号</span><br><span class="line"></span><br><span class="line">    public DBHelper(Context context) &#123;</span><br><span class="line">        super(context, DATABASE_NAME, null, DATABASE_VERSION);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate(SQLiteDatabase db) &#123;</span><br><span class="line"></span><br><span class="line">        // 创建两个表格:用户表 和职业表</span><br><span class="line">        db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + USER_TABLE_NAME + &quot;(_id INTEGER PRIMARY KEY AUTOINCREMENT,&quot; + &quot; name TEXT)&quot;);</span><br><span class="line">        db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + JOB_TABLE_NAME + &quot;(_id INTEGER PRIMARY KEY AUTOINCREMENT,&quot; + &quot; job TEXT)&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)   &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2. 自定义ContentProvider类</strong></p>
+<p><em>MyPovider.java</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line">public class MyProvider extends ContentProvider &#123;</span><br><span class="line"></span><br><span class="line">    private Context mContext;</span><br><span class="line">    DBHelper mDbHelper = null;</span><br><span class="line">    SQLiteDatabase db = null;</span><br><span class="line"></span><br><span class="line">    public static final String AUTOHORITY = &quot;cn.scu.myprovider&quot;;</span><br><span class="line">    // 设置ContentProvider的唯一标识</span><br><span class="line"></span><br><span class="line">    public static final int User_Code = 1;</span><br><span class="line">    public static final int Job_Code = 2;</span><br><span class="line"></span><br><span class="line">    // UriMatcher类使用:在ContentProvider 中注册URI</span><br><span class="line">    private static final UriMatcher mMatcher;</span><br><span class="line">    static&#123;</span><br><span class="line">        mMatcher = new UriMatcher(UriMatcher.NO_MATCH);</span><br><span class="line">        // 初始化</span><br><span class="line">        mMatcher.addURI(AUTOHORITY,&quot;user&quot;, User_Code);</span><br><span class="line">        mMatcher.addURI(AUTOHORITY, &quot;job&quot;, Job_Code);</span><br><span class="line">        // 若URI资源路径 = content://cn.scu.myprovider/user ，则返回注册码User_Code</span><br><span class="line">        // 若URI资源路径 = content://cn.scu.myprovider/job ，则返回注册码Job_Code</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 以下是ContentProvider的6个方法</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 初始化ContentProvider</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean onCreate() &#123;</span><br><span class="line"></span><br><span class="line">        mContext = getContext();</span><br><span class="line">        // 在ContentProvider创建时对数据库进行初始化</span><br><span class="line">        // 运行在主线程，故不能做耗时操作,此处仅作展示</span><br><span class="line">        mDbHelper = new DBHelper(getContext());</span><br><span class="line">        db = mDbHelper.getWritableDatabase();</span><br><span class="line"></span><br><span class="line">        // 初始化两个表的数据(先清空两个表,再各加入一个记录)</span><br><span class="line">        db.execSQL(&quot;delete from user&quot;);</span><br><span class="line">        db.execSQL(&quot;insert into user values(1,&apos;Carson&apos;);&quot;);</span><br><span class="line">        db.execSQL(&quot;insert into user values(2,&apos;Kobe&apos;);&quot;);</span><br><span class="line"></span><br><span class="line">        db.execSQL(&quot;delete from job&quot;);</span><br><span class="line">        db.execSQL(&quot;insert into job values(1,&apos;Android&apos;);&quot;);</span><br><span class="line">        db.execSQL(&quot;insert into job values(2,&apos;iOS&apos;);&quot;);</span><br><span class="line"></span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 添加数据</span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Uri insert(Uri uri, ContentValues values) &#123;</span><br><span class="line"></span><br><span class="line">        // 根据URI匹配 URI_CODE，从而匹配ContentProvider中相应的表名</span><br><span class="line">        // 该方法在最下面</span><br><span class="line">        String table = getTableName(uri);</span><br><span class="line"></span><br><span class="line">        // 向该表添加数据</span><br><span class="line">        db.insert(table, null, values);</span><br><span class="line"></span><br><span class="line">        // 当该URI的ContentProvider数据发生变化时，通知外界（即访问该ContentProvider数据的访问者）</span><br><span class="line">        mContext.getContentResolver().notifyChange(uri, null);</span><br><span class="line"></span><br><span class="line">//        // 通过ContentUris类从URL中获取ID</span><br><span class="line">//        long personid = ContentUris.parseId(uri);</span><br><span class="line">//        System.out.println(personid);</span><br><span class="line"></span><br><span class="line">        return uri;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询数据</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public Cursor query(Uri uri, String[] projection, String selection,</span><br><span class="line">                        String[] selectionArgs, String sortOrder) &#123;</span><br><span class="line">        // 根据URI匹配 URI_CODE，从而匹配ContentProvider中相应的表名</span><br><span class="line">        // 该方法在最下面</span><br><span class="line">        String table = getTableName(uri);</span><br><span class="line"></span><br><span class="line">//        // 通过ContentUris类从URL中获取ID</span><br><span class="line">//        long personid = ContentUris.parseId(uri);</span><br><span class="line">//        System.out.println(personid);</span><br><span class="line"></span><br><span class="line">        // 查询数据</span><br><span class="line">        return db.query(table,projection,selection,selectionArgs,null,null,sortOrder,null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 更新数据</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public int update(Uri uri, ContentValues values, String selection,</span><br><span class="line">                      String[] selectionArgs) &#123;</span><br><span class="line">        // 由于不展示,此处不作展开</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 删除数据</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public int delete(Uri uri, String selection, String[] selectionArgs) &#123;</span><br><span class="line">        // 由于不展示,此处不作展开</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String getType(Uri uri) &#123;</span><br><span class="line"></span><br><span class="line">        // 由于不展示,此处不作展开</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据URI匹配 URI_CODE，从而匹配ContentProvider中相应的表名</span><br><span class="line">     */</span><br><span class="line">    private String getTableName(Uri uri)&#123;</span><br><span class="line">        String tableName = null;</span><br><span class="line">        switch (mMatcher.match(uri)) &#123;</span><br><span class="line">            case User_Code:</span><br><span class="line">                tableName = DBHelper.USER_TABLE_NAME;</span><br><span class="line">                break;</span><br><span class="line">            case Job_Code:</span><br><span class="line">                tableName = DBHelper.JOB_TABLE_NAME;</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">        return tableName;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>3. 注册创建的ContentProvider类</strong></p>
+<p><em>AndroidManifest.xml</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider android:name=&quot;MyProvider&quot;</span><br><span class="line">                android:authorities=&quot;cn.scu.myprovider&quot;</span><br><span class="line">                    /&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>4. 在进程内访问ContentProvider中的数据</strong></p>
+<p><em>MainActivity.java</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 对user表进行操作</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">        // 设置URI</span><br><span class="line">        Uri uri_user = Uri.parse(&quot;content://cn.scu.myprovider/user&quot;);</span><br><span class="line"></span><br><span class="line">        // 插入表中数据</span><br><span class="line">        ContentValues values = new ContentValues();</span><br><span class="line">        values.put(&quot;_id&quot;, 3);</span><br><span class="line">        values.put(&quot;name&quot;, &quot;Iverson&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 获取ContentResolver</span><br><span class="line">        ContentResolver resolver =  getContentResolver();</span><br><span class="line">        // 通过ContentResolver 根据URI 向ContentProvider中插入数据</span><br><span class="line">        resolver.insert(uri_user,values);</span><br><span class="line"></span><br><span class="line">        // 通过ContentResolver 向ContentProvider中查询数据</span><br><span class="line">        Cursor cursor = resolver.query(uri_user, new String[]&#123;&quot;_id&quot;,&quot;name&quot;&#125;, null, null, null);</span><br><span class="line">        while (cursor.moveToNext())&#123;</span><br><span class="line">            System.out.println(&quot;query book:&quot; + cursor.getInt(0) +&quot; &quot;+ cursor.getString(1));</span><br><span class="line">            // 将表中数据全部输出</span><br><span class="line">        &#125;</span><br><span class="line">        cursor.close();</span><br><span class="line">        // 关闭游标</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 对job表进行操作</span><br><span class="line">         */</span><br><span class="line">        // 和上述类似,只是URI需要更改,从而匹配不同的URI CODE,从而找到不同的数据资源</span><br><span class="line">        Uri uri_job = Uri.parse(&quot;content://cn.scu.myprovider/job&quot;);</span><br><span class="line">        </span><br><span class="line">        // 插入表中数据</span><br><span class="line">        ContentValues values2 = new ContentValues();</span><br><span class="line">        values2.put(&quot;_id&quot;, 3);</span><br><span class="line">        values2.put(&quot;job&quot;, &quot;NBA Player&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取ContentResolver</span><br><span class="line">        ContentResolver resolver2 =  getContentResolver();</span><br><span class="line">        // 通过ContentResolver 根据URI 向ContentProvider中插入数据</span><br><span class="line">        resolver2.insert(uri_job,values2);</span><br><span class="line"></span><br><span class="line">        // 通过ContentResolver 向ContentProvider中查询数据</span><br><span class="line">        Cursor cursor2 = resolver2.query(uri_job, new String[]&#123;&quot;_id&quot;,&quot;job&quot;&#125;, null, null, null);</span><br><span class="line">        while (cursor2.moveToNext())&#123;</span><br><span class="line">            System.out.println(&quot;query job:&quot; + cursor2.getInt(0) +&quot; &quot;+ cursor2.getString(1));</span><br><span class="line">            // 将表中数据全部输出</span><br><span class="line">        &#125;</span><br><span class="line">        cursor2.close();</span><br><span class="line">        // 关闭游标</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-2-进程间进行数据共享"><a href="#5-2-进程间进行数据共享" class="headerlink" title="5.2 进程间进行数据共享"></a>5.2 进程间进行数据共享</h4><h5 id="进程1"><a href="#进程1" class="headerlink" title="进程1"></a>进程1</h5><p>步骤如上文</p>
+<ol>
+<li>创建数据库类</li>
+<li>自定义ContentProvider类</li>
+<li>注册创建的ContentProvider类</li>
+</ol>
+<p>前两步和上例相同，第三步如下：</p>
+<p><em>AndroidManifest.xml</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider </span><br><span class="line">               android:name=&quot;MyProvider&quot;</span><br><span class="line">               android:authorities=&quot;scut.carson_ho.myprovider&quot;</span><br><span class="line"></span><br><span class="line">               // 声明外界进程可访问该Provider的权限（读 &amp; 写）</span><br><span class="line">               android:permission=&quot;scut.carson_ho.PROVIDER&quot;             </span><br><span class="line">               </span><br><span class="line">               // 权限可细分为读 &amp; 写的权限</span><br><span class="line">               // 外界需要声明同样的读 &amp; 写的权限才可进行相应操作，否则会报错</span><br><span class="line">               // android:readPermisson = &quot;scut.carson_ho.Read&quot;</span><br><span class="line">               // android:writePermisson = &quot;scut.carson_ho.Write&quot;</span><br><span class="line"></span><br><span class="line">               // 设置此provider是否可以被其他进程使用</span><br><span class="line">               android:exported=&quot;true&quot;</span><br><span class="line">                </span><br><span class="line">  /&gt;</span><br><span class="line"></span><br><span class="line">// 声明本应用 可允许通信的权限</span><br><span class="line">    &lt;permission android:name=&quot;scut.carson_ho.Read&quot; android:protectionLevel=&quot;normal&quot;/&gt;</span><br><span class="line">    // 细分读 &amp; 写权限如下，但本Demo直接采用全权限</span><br><span class="line">    // &lt;permission android:name=&quot;scut.carson_ho.Write&quot; android:protectionLevel=&quot;normal&quot;/&gt;</span><br><span class="line">    // &lt;permission android:name=&quot;scut.carson_ho.PROVIDER&quot; android:protectionLevel=&quot;normal&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="进程2"><a href="#进程2" class="headerlink" title="进程2"></a>进程2</h5><p><strong>1. 声明可访问的权限</strong></p>
+<p><em>AndroidManifest.xml</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;scut.carson_ho.PROVIDER&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<p>2.访问ContentProvider中的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 对user表进行操作</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">        // 设置URI</span><br><span class="line">        Uri uri_user = Uri.parse(&quot;content://scut.carson_ho.myprovider/user&quot;);</span><br><span class="line"></span><br><span class="line">        // 插入表中数据</span><br><span class="line">        ContentValues values = new ContentValues();</span><br><span class="line">        values.put(&quot;_id&quot;, 4);</span><br><span class="line">        values.put(&quot;name&quot;, &quot;Jordan&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 获取ContentResolver</span><br><span class="line">        ContentResolver resolver =  getContentResolver();</span><br><span class="line">        // 通过ContentResolver 根据URI 向ContentProvider中插入数据</span><br><span class="line">        resolver.insert(uri_user,values);</span><br><span class="line"></span><br><span class="line">        // 通过ContentResolver 向ContentProvider中查询数据</span><br><span class="line">        Cursor cursor = resolver.query(uri_user, new String[]&#123;&quot;_id&quot;,&quot;name&quot;&#125;, null, null, null);</span><br><span class="line">        while (cursor.moveToNext())&#123;</span><br><span class="line">            System.out.println(&quot;query book:&quot; + cursor.getInt(0) +&quot; &quot;+ cursor.getString(1));</span><br><span class="line">            // 将表中数据全部输出</span><br><span class="line">        &#125;</span><br><span class="line">        cursor.close();</span><br><span class="line">        // 关闭游标</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 对job表进行操作</span><br><span class="line">         */</span><br><span class="line">        // 和上述类似,只是URI需要更改,从而匹配不同的URI CODE,从而找到不同的数据资源</span><br><span class="line">        Uri uri_job = Uri.parse(&quot;content://scut.carson_ho.myprovider/job&quot;);</span><br><span class="line"></span><br><span class="line">        // 插入表中数据</span><br><span class="line">        ContentValues values2 = new ContentValues();</span><br><span class="line">        values2.put(&quot;_id&quot;, 4);</span><br><span class="line">        values2.put(&quot;job&quot;, &quot;NBA Player&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取ContentResolver</span><br><span class="line">        ContentResolver resolver2 =  getContentResolver();</span><br><span class="line">        // 通过ContentResolver 根据URI 向ContentProvider中插入数据</span><br><span class="line">        resolver2.insert(uri_job,values2);</span><br><span class="line"></span><br><span class="line">        // 通过ContentResolver 向ContentProvider中查询数据</span><br><span class="line">        Cursor cursor2 = resolver2.query(uri_job, new String[]&#123;&quot;_id&quot;,&quot;job&quot;&#125;, null, null, null);</span><br><span class="line">        while (cursor2.moveToNext())&#123;</span><br><span class="line">            System.out.println(&quot;query job:&quot; + cursor2.getInt(0) +&quot; &quot;+ cursor2.getString(1));</span><br><span class="line">            // 将表中数据全部输出</span><br><span class="line">        &#125;</span><br><span class="line">        cursor2.close();</span><br><span class="line">        // 关闭游标</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-05-25T11:45:25.822Z" itemprop="dateUpdated">2018-05-25 19:45:25</time>
+</span><br>
+
+
+        
+        多谢访问，示例：<a href="/2018/05/25/Android四大组件-ContentProvider/" target="_blank" rel="external">http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="ksballetba">
+            ksballetba
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&title=《Android四大组件--ContentProvider》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&title=《Android四大组件--ContentProvider》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android四大组件--ContentProvider》 — KS'BLOG&url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/25/图解Git/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">图解Git</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>ksballetba &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&title=《Android四大组件--ContentProvider》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&title=《Android四大组件--ContentProvider》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android四大组件--ContentProvider》 — KS'BLOG&url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/05/25/Android四大组件-ContentProvider/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
