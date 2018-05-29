@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Android基础原理--JVM解析 | KS&#39;BLOG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1.简介之所以java能够使用同一份代码在不同的环境上运行，这其实都是虚拟机的功劳，他是一个虚拟出来的计算机，可以仿真各种计算机功能。 2.内存区域Java虚拟机在执行Java程序的过程中会把它锁管理的内存划分为若干个不同的数据区域。这些区域都有各自的用途，以及创建和销毁的事件，有的区域随着虚拟机进程的启动而存在，有些区域则依赖用户线程的启动和结束而建立和销毁。主要包含以下几个运行时数据区域：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android基础原理--JVM解析">
+<meta property="og:url" content="http://yoursite.com/2018/05/29/Android基础原理-JVM解析/index.html">
+<meta property="og:site_name" content="KS&#39;BLOG">
+<meta property="og:description" content="1.简介之所以java能够使用同一份代码在不同的环境上运行，这其实都是虚拟机的功劳，他是一个虚拟出来的计算机，可以仿真各种计算机功能。 2.内存区域Java虚拟机在执行Java程序的过程中会把它锁管理的内存划分为若干个不同的数据区域。这些区域都有各自的用途，以及创建和销毁的事件，有的区域随着虚拟机进程的启动而存在，有些区域则依赖用户线程的启动和结束而建立和销毁。主要包含以下几个运行时数据区域：">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/19/15fd38266085e091?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/19/15fd3825c69a6dc0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/19/15fd3825becc3872?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/19/15fd382613195b56?imageView2/0/w/1280/h/960/format/webp/ignore-error/1o">
+<meta property="og:updated_time" content="2018-05-29T06:53:37.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android基础原理--JVM解析">
+<meta name="twitter:description" content="1.简介之所以java能够使用同一份代码在不同的环境上运行，这其实都是虚拟机的功劳，他是一个虚拟出来的计算机，可以仿真各种计算机功能。 2.内存区域Java虚拟机在执行Java程序的过程中会把它锁管理的内存划分为若干个不同的数据区域。这些区域都有各自的用途，以及创建和销毁的事件，有的区域随着虚拟机进程的启动而存在，有些区域则依赖用户线程的启动和结束而建立和销毁。主要包含以下几个运行时数据区域：">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/11/19/15fd38266085e091?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">ksballetba</h5>
+          <a href="mailto:2501226111@qq.com" title="2501226111@qq.com" class="mail">2501226111@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ksballetba" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5262079347/profile?rightmod=1&wvr=6&mod=personinfo" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android基础原理--JVM解析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android基础原理--JVM解析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-29T06:53:13.000Z" itemprop="datePublished" class="page-time">
+  2018-05-29
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.简介</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-内存区域"><span class="post-toc-number">2.</span> <span class="post-toc-text">2.内存区域</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#程序计数器-Program-Count-Register"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">程序计数器 Program Count Register</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#虚拟机栈-Stack"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">虚拟机栈 Stack</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#本地方法栈-Native-Stack"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">本地方法栈 Native Stack</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#GC堆-Heap"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">GC堆 Heap</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#方法区-Method-Area"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">方法区 Method Area</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-GC机制"><span class="post-toc-number">3.</span> <span class="post-toc-text">3.GC机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#GC判定算法"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">GC判定算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#GC收集算法"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">GC收集算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-类加载机制"><span class="post-toc-number">4.</span> <span class="post-toc-text">4.类加载机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#概述"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#加载过程"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">加载过程</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#类加载器"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">类加载器</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#双亲委派模型"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">双亲委派模型</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Android基础原理-JVM解析"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android基础原理--JVM解析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-29 14:53:13" datetime="2018-05-29T06:53:13.000Z"  itemprop="datePublished">2018-05-29</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>之所以java能够使用同一份代码在不同的环境上运行，这其实都是虚拟机的功劳，他是一个虚拟出来的计算机，可以仿真各种计算机功能。</p>
+<h3 id="2-内存区域"><a href="#2-内存区域" class="headerlink" title="2.内存区域"></a>2.内存区域</h3><p>Java虚拟机在执行Java程序的过程中会把它锁管理的内存划分为若干个不同的数据区域。这些区域都有各自的用途，以及创建和销毁的事件，有的区域随着虚拟机进程的启动而存在，有些区域则依赖用户线程的启动和结束而建立和销毁。主要包含以下几个运行时数据区域：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://user-gold-cdn.xitu.io/2017/11/19/15fd38266085e091?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="Java运行时区域" title="">
+                </div>
+                <div class="image-caption">Java运行时区域</div>
+            </figure>
+<h4 id="程序计数器-Program-Count-Register"><a href="#程序计数器-Program-Count-Register" class="headerlink" title="程序计数器 Program Count Register"></a>程序计数器 <em>Program Count Register</em></h4><p>程序计数器是一块较小的内存空间，可以被看做是当前线程所执行的字节码的行号指示器，每个线程都有自己独立的程序计数器。<br>如果线程正在执行Java方法，那么计数器的值就是正在执行的虚拟机字节码指令的地址；如果正在执行的是Native方法，那么计数值为空。此内存区域是唯一一个在java虚拟机规范中没有规定任何OOM情况的区域。</p>
+<h4 id="虚拟机栈-Stack"><a href="#虚拟机栈-Stack" class="headerlink" title="虚拟机栈 Stack"></a>虚拟机栈 <em>Stack</em></h4><p>线程私有的，他的生命周期与线程相同。虚拟机栈描述的是Java方法执行的内存模型：每个方法执行的同时都会创建一个栈帧用于储存局部变量表、操作数栈、动态链接、方法出口灯信息。<br>局部变量表存放了编译期可知的各种基本数据类型、对象引用个returnAddress类型。<br>long，double占用两个局部变量控件，其余数据类型占一个。局部变量表所需的内存空间在编译期间分配完成，当进入一个方法时，这个方法需要在帧中分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量表的大小。如果线程请求栈的深度大宇虚拟机所允许的深度，则抛出SOF异常，无法申请到内存则抛出OOM异常。</p>
+<h4 id="本地方法栈-Native-Stack"><a href="#本地方法栈-Native-Stack" class="headerlink" title="本地方法栈 Native Stack"></a>本地方法栈 <em>Native Stack</em></h4><p>本地方法栈和虚拟机栈发挥的作用类似，不过是虚拟机栈执行java方法，本地栈执行虚拟机使用到的native方法。</p>
+<h4 id="GC堆-Heap"><a href="#GC堆-Heap" class="headerlink" title="GC堆 Heap"></a>GC堆 <em>Heap</em></h4><p>Java堆是线程共享的，在虚拟机启动时创建。唯一的目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。<br>Java堆是垃圾收集器管理的主要区域，也被叫做”GC堆”。</p>
+<h4 id="方法区-Method-Area"><a href="#方法区-Method-Area" class="headerlink" title="方法区 Method Area"></a>方法区 <em>Method Area</em></h4><p>线程共享，用于存储已被虚拟机加载的类信息，常量，静态变量，即时编译器编译后的代码等数据。</p>
+<h3 id="3-GC机制"><a href="#3-GC机制" class="headerlink" title="3.GC机制"></a>3.GC机制</h3><p>GC回收的时候需要判断三个条件：</p>
+<ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>如何回收？</li>
+</ol>
+<p>java内存中的程序计数器，虚拟机栈，本地方法栈都不用考虑回收问题。因为线程结束，内存自然就回收了。<br>java堆和方法区不一样，一个接口中的多个实现类需要的内存可能不一样，一个方法中的多个实现类需要的内存可能不一样，垃圾收集器主要在堆里工作。</p>
+<p><strong>对象引用</strong></p>
+<p>Java中一共有四种对象引用，由强到弱依次是强、软、弱、虚。</p>
+<ul>
+<li>强引用：是我们最常见的引用，如”Object obj = new Object()”，这类引用垃圾回收器永远不会回收掉被引用的对象。</li>
+<li>软引用：它用来描述一些可能还有用，但是非必须的对象。当系统内存不够用是，这类引用的对象将被回收。</li>
+<li>弱引用：它被用来描述非需对象，每一次垃圾回收器工作，无论当前内存是否足够，都会回收。</li>
+<li>虚引用：最弱，完全不会对其生存时间构成印象，无法通过引用来取得一个对象实例（我也不知道这个有啥用）</li>
+</ul>
+<h4 id="GC判定算法"><a href="#GC判定算法" class="headerlink" title="GC判定算法"></a>GC判定算法</h4><ol>
+<li>引用计数算法</li>
+</ol>
+<p>给对象中添加一个引用计数器，每当有一个地方引用它是，计数器加1，引用失效计数器值减1。计数器值为0的对象就是不可能再被使用的，iOS内好像用的比较多。但是java虚拟机并没有使用这个算法</p>
+<ol start="2">
+<li>可达性分析算法</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://user-gold-cdn.xitu.io/2017/11/19/15fd3825c69a6dc0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="可达性分析图解" title="">
+                </div>
+                <div class="image-caption">可达性分析图解</div>
+            </figure>
+<p>可达性分析通过一系列成为”GCRoots”的对象作为起始点，从这些节点开始向下搜索，当一个对象是从根节点不可达是，证明此对象是不可用的。<br>GCRoots主要有以下几种：</p>
+<p>虚拟机栈（栈帧中的本地变量表）中引用的对象；</p>
+<p>方法区中类静态属性引用的对象；</p>
+<p>方法区中常量引用的对象；</p>
+<p>本地方法栈中JNI（即一般说的Native方法）引用的对象；</p>
+<h4 id="GC收集算法"><a href="#GC收集算法" class="headerlink" title="GC收集算法"></a>GC收集算法</h4><ol>
+<li>标记-清除算法</li>
+</ol>
+<p>首先标记所有需要被回收的对象，在标记完成之后统一回收被标记的对象。使用可达性算法。</p>
+<ol start="2">
+<li>复制算法</li>
+</ol>
+<p>将可用内存分为大小相等的两块，每次只使用其中的一块。每当一块的内存用完，就将还存活着的对象复制到另一块上面，然后把已经使用过内存空间一次清理掉。</p>
+<ol start="3">
+<li>标记整理算法</li>
+</ol>
+<p>过程和标记清除一样，但是不是将可回收对象清理掉。而是将所有存活对象向一端移动，然后直接清理掉边界以外的内存。</p>
+<ol start="4">
+<li>分代算法</li>
+</ol>
+<p>根据对象存活周期的不同将内存分为几块。分为新年代和老年代，根据年代特点采用最合适的算法</p>
+<h3 id="4-类加载机制"><a href="#4-类加载机制" class="headerlink" title="4.类加载机制"></a>4.类加载机制</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>虚拟机把描述类的数据从Class文件加载到内存，并对数据进行检验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。</p>
+<h4 id="加载过程"><a href="#加载过程" class="headerlink" title="加载过程"></a>加载过程</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://user-gold-cdn.xitu.io/2017/11/19/15fd3825becc3872?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="类加载过程" title="">
+                </div>
+                <div class="image-caption">类加载过程</div>
+            </figure>
+<ul>
+<li><strong>加载阶段：</strong>虚拟机需要完成以下三件事情：</li>
+</ul>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流；</li>
+<li>将这个字节流所代表的静态储存结构转化为方法区的运行时数据结构</li>
+<li>Java堆中生成一个代表这个类java.lang.Class对象，作为方法区这些数据的访问入口</li>
+</ol>
+<ul>
+<li><strong>验证阶段</strong>：是连接阶段的第一步，这一阶段的目的是为了确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全</li>
+<li><strong>准备阶段</strong>：是为类的静态变量分配内存并将其初始化为默认值，这些内存都将在方法区中进行分配。准备阶段不分配类中的实例变量的内存，实例变量将会在对象实例化时随着对象一起分配在Java堆中。</li>
+<li><strong>解析阶段</strong>：是虚拟机将常量池内的符号引用替换为直接引用的过程。</li>
+<li><strong>类初始化</strong>：是类加载过程的最后一步，前面的类加载过程，除了在加载阶段用户应用程序可以通过自定义类加载器参与之外，其余动作完全由虚拟机主导和控制。到了初始化阶段，才真正开始执行类中定义的Java程序代码</li>
+</ul>
+<h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><ol>
+<li>启动类加载器</li>
+<li>扩展类加载器</li>
+<li>应用程序类加载器</li>
+</ol>
+<h4 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h4><p>类加载的加载顺序是自下而上的：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://user-gold-cdn.xitu.io/2017/11/19/15fd382613195b56?imageView2/0/w/1280/h/960/format/webp/ignore-error/1o" alt="双亲委任模型" title="">
+                </div>
+                <div class="image-caption">双亲委任模型</div>
+            </figure>
+<p>双亲委派模型的工作过程：如果一个类加载器接受到了类加载的请求，它首先把这个请求委托给他的父类加载器，每个层次的类加载器都是如此，当父类加载器无法完成这个加载请求是，子加载器才会尝试自己去加载。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-05-29T06:53:37.432Z" itemprop="dateUpdated">2018-05-29 14:53:37</time>
+</span><br>
+
+
+        
+        多谢访问，示例：<a href="/2018/05/29/Android基础原理-JVM解析/" target="_blank" rel="external">http://yoursite.com/2018/05/29/Android基础原理-JVM解析/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="ksballetba">
+            ksballetba
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&title=《Android基础原理--JVM解析》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&title=《Android基础原理--JVM解析》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android基础原理--JVM解析》 — KS'BLOG&url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/25/Android四大组件-ContentProvider/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android四大组件--ContentProvider</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>ksballetba &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&title=《Android基础原理--JVM解析》 — KS'BLOG&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&title=《Android基础原理--JVM解析》 — KS'BLOG&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android基础原理--JVM解析》 — KS'BLOG&url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/05/29/Android基础原理-JVM解析/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
